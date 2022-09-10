@@ -1,0 +1,33 @@
+#theCanvas {
+    background-color: rgba(0, 204, 204, 1);
+    background-color: rgb(180, 180, 180);
+}
+
+body {
+    background-color: rgb(240, 240, 240);
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#title {
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 16px;
+}
+
+#container {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(60, 120, 170);
+    padding: 32px;
+}
+
+#keyboard {
+    margin-bottom: 8px;
+}
