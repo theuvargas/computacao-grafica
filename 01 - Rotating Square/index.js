@@ -49,7 +49,7 @@ function translateBack(points, xOffset, yOffset) {
 
 function setAnimation(context, points, width, height) {
     let vertex = 0;
-    let angleChange = 2;
+    let angleChange = -2;
 
     document.addEventListener('keypress', (e) => {
         const key = e.key;
