@@ -1,4 +1,5 @@
 const vertexSize = 5;
+const demo = document;
 
 function drawIsoTriangle(context, points) {
     const [p1, p2, color] = points;
@@ -33,22 +34,6 @@ function drawCircle(context, points) {
 
     context.strokeStyle = color;
     context.stroke();
-}
-
-function sub(p1, p2) {
-    let out = {};
-    out.x = p1.x - p2.x;
-    out.y = p1.y - p2.y;
-
-    return out;
-}
-
-function add(p1, p2) {
-    let out = {};
-    out.x = p1.x + p2.x;
-    out.y = p1.y + p2.y;
-
-    return out;
 }
 
 function distance(a, b) {
@@ -110,11 +95,11 @@ function rectangleLineSegments(rectangle) {
 function determinant(a) {
     let a00 = a[0],
         a01 = a[1],
-        a02 = a[2];
-    let a10 = a[3],
+        a02 = a[2],
+        a10 = a[3],
         a11 = a[4],
-        a12 = a[5];
-    let a20 = a[6],
+        a12 = a[5],
+        a20 = a[6],
         a21 = a[7],
         a22 = a[8];
 
@@ -172,11 +157,9 @@ function circlesIntersect(c1, c2) {
 function parallelSegment(seg) {
     const [p1, p2] = seg;
 
-    const normalVector = multiplyVector(
-        normalizeVector(perpendicularVector(pointSub(p1, p2))),
-        1
-    );
-    return [pointAdd(p1, normalVector), pointAdd(p2, normalVector)];
+    const normalVector = normalizeVector(perpendicularVector(sub(p1, p2)));
+
+    return [add(p1, normalVector), add(p2, normalVector)];
 }
 
 function figsAreSeparatedBySomeSeg(
@@ -450,20 +433,10 @@ function main() {
         [{ x: 400, y: 800 }, { x: 350, y: 800 }, { x: 400, y: 750 }, 'black'],
     ];
 
-    circles.forEach((circle) => {
-        drawCircle(context, circle);
-    });
+    drawFigures(context, [triangles, circles, rectangles]);
 
-    triangles.forEach((triangle) => {
-        drawIsoTriangle(context, triangle);
-    });
-
-    rectangles.forEach((r) => {
-        drawRectangle(context, r);
-    });
-
-    window.onmouseup = () => {
-        window.onmousemove = null;
+    demo.onmouseup = () => {
+        demo.onmousemove = null;
     };
 
     const triangleDragBase = (e, triangle) => {
@@ -509,9 +482,9 @@ function main() {
         let [base, vtx, perpVtx, color] = rectangle;
 
         const len = distance(base, perpVtx);
-        const newPerpVtx = pointAdd(
+        const newPerpVtx = add(
             multiplyVector(
-                normalizeVector(perpendicularVector(pointSub(mouse, base))),
+                normalizeVector(perpendicularVector(sub(mouse, base))),
                 len
             ),
             base
@@ -524,9 +497,9 @@ function main() {
         let [base, vtx, perpVtx, color] = rectangle;
 
         const len = distance(base, vtx);
-        const newPerpVtx = pointAdd(
+        const newPerpVtx = add(
             multiplyVector(
-                normalizeVector(perpendicularVector(pointSub(mouse, base))),
+                normalizeVector(perpendicularVector(sub(mouse, base))),
                 len
             ),
             base
@@ -539,17 +512,17 @@ function main() {
         const mouse = { x: e.offsetX, y: e.offsetY };
         const [base, vtx, vtx2, color] = rectangle;
 
-        const newVtx = pointSub(mouse, pointSub(base, vtx));
+        const newVtx = sub(mouse, sub(base, vtx));
 
-        const newPerpVtx = pointSub(mouse, pointSub(base, vtx2));
+        const newPerpVtx = sub(mouse, sub(base, vtx2));
 
         return [mouse, newVtx, newPerpVtx, color];
     };
 
-    window.onmousedown = (e) => {
+    demo.onmousedown = (e) => {
         const maxDist = 10;
         const mouse = { x: e.offsetX, y: e.offsetY };
-        window.onmousemove = null;
+        demo.onmousemove = null;
 
         for (let i of [0, 1]) {
             circles.forEach((circle, j) => {
@@ -557,7 +530,7 @@ function main() {
                 let d = distance(mouse, p);
 
                 if (d <= maxDist) {
-                    window.onmousemove =
+                    demo.onmousemove =
                         i === 0
                             ? (e) => {
                                   circles[j] = circleDragBase(e, circle);
@@ -583,7 +556,7 @@ function main() {
                 const d = distance(mouse, p);
 
                 if (d <= maxDist) {
-                    window.onmousemove =
+                    demo.onmousemove =
                         i === 0
                             ? (e) => {
                                   triangles[j] = triangleDragBase(e, triangle);
@@ -610,9 +583,9 @@ function main() {
             let p2 = pointReflection(p1, base);
 
             const len = distance(vtx2, base);
-            let p3 = pointAdd(
+            let p3 = add(
                 multiplyVector(
-                    normalizeVector(perpendicularVector(pointSub(vtx, base))),
+                    normalizeVector(perpendicularVector(sub(vtx, base))),
                     len
                 ),
                 base
@@ -626,32 +599,32 @@ function main() {
             let d4 = distance(mouse, p4);
 
             if (d0 <= maxDist) {
-                window.onmousemove = (e) => {
+                demo.onmousemove = (e) => {
                     rectangles[j] = rectangleDragBase2(e, rect);
                     drawFigures(context, [triangles, circles, rectangles]);
                 };
             }
 
             if (d1 <= maxDist) {
-                window.onmousemove = (e) => {
+                demo.onmousemove = (e) => {
                     rectangles[j] = rectangleDragVtx2(e, rect, 1);
                     drawFigures(context, [triangles, circles, rectangles]);
                 };
             }
             if (d2 <= maxDist) {
-                window.onmousemove = (e) => {
+                demo.onmousemove = (e) => {
                     rectangles[j] = rectangleDragVtx2(e, rect, 2);
                     drawFigures(context, [triangles, circles, rectangles]);
                 };
             }
             if (d3 <= maxDist) {
-                window.onmousemove = (e) => {
+                demo.onmousemove = (e) => {
                     rectangles[j] = rectangleDragVtx3(e, rect, 3);
                     drawFigures(context, [triangles, circles, rectangles]);
                 };
             }
             if (d4 <= maxDist) {
-                window.onmousemove = (e) => {
+                demo.onmousemove = (e) => {
                     rectangles[j] = rectangleDragVtx3(e, rect, 4);
                     drawFigures(context, [triangles, circles, rectangles]);
                 };
@@ -673,21 +646,14 @@ function perpendicularVector(v) {
     return { x: v.y, y: -v.x };
 }
 
-function decomposedDistance(p1, p2) {
-    const xDist = p1.x - p2.x;
-    const yDist = p1.y - p2.y;
-
-    return [xDist, yDist];
-}
-
-function pointSub(p1, p2) {
+function sub(p1, p2) {
     const x = p1.x - p2.x;
     const y = p1.y - p2.y;
 
     return { x, y };
 }
 
-function pointAdd(p1, p2) {
+function add(p1, p2) {
     const x = p1.x + p2.x;
     const y = p1.y + p2.y;
 
@@ -705,9 +671,9 @@ function drawRectangle(context, rectangle) {
     drawVertex(context, pointReflection(vtx, base), vertexSize, color);
 
     const len = distance(perpVtx, base);
-    const p2 = pointAdd(
+    const p2 = add(
         multiplyVector(
-            normalizeVector(perpendicularVector(pointSub(vtx, base))),
+            normalizeVector(perpendicularVector(sub(vtx, base))),
             len
         ),
         base
@@ -730,10 +696,7 @@ function drawRectangle(context, rectangle) {
 function generateRectanglePoints(rectangle) {
     const [base, vtx, perpVtx] = rectangle;
 
-    const e1 = pointAdd(
-        base,
-        pointAdd(pointSub(vtx, base), pointSub(perpVtx, base))
-    );
+    const e1 = add(base, add(sub(vtx, base), sub(perpVtx, base)));
     const e2 = pointReflection(e1, perpVtx);
     const e3 = pointReflection(e1, base);
     const e4 = pointReflection(e1, vtx);
