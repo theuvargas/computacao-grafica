@@ -476,9 +476,6 @@ function handleKeyPress(event) {
         default:
             return;
     }
-    // opt.innerHTML = `<br>${gl.getParameter(
-    //     gl.SHADING_LANGUAGE_VERSION
-    // )}<br>${gl.getParameter(gl.VERSION)}`;
 }
 
 /**
@@ -544,9 +541,9 @@ function renderCube(matrixStack, matrixLocal) {
 }
 
 /** Code to actually render our geometry. */
-function draw(rotator) {
+function draw() {
     // clear the framebuffer
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // set up the matrix stack
     var s = new Stack();
@@ -622,9 +619,6 @@ function draw(rotator) {
     if (!s.isEmpty()) {
         console.log('Warning: pops do not match pushes');
     }
-
-    const newView = { elements: rotator.getViewMatrixArray() };
-    view = new Matrix4(newView);
 }
 
 /**
@@ -692,12 +686,14 @@ window.addEventListener('load', (event) => {
 
     gl.enable(gl.DEPTH_TEST);
 
-    // const rotator = new SimpleRotator(canvas, draw, 50); // simple rotator 2
-    const rotator = new SimpleRotator(canvas, () => draw(rotator), eye);
+    const rotator = new SimpleRotator(canvas, draw, 45, -40, 30); // simple rotator 2
 
     // define an animation loop
     var animate = () => {
-        draw(rotator);
+        const newView = { elements: rotator.getViewMatrix() };
+        view = new Matrix4(newView);
+
+        draw();
         requestAnimationFrame(animate);
     };
 
