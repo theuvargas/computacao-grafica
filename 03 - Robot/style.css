@@ -1,0 +1,59 @@
+main {
+    background-color: cornflowerblue;
+}
+
+#theCanvas {
+    cursor: grab;
+}
+#theCanvas:active {
+    cursor: grabbing;
+}
+
+body {
+    background-color: beige;
+    display: flex;
+    justify-content: center;
+}
+
+#container {
+    width: min-content;
+    background-color: #4f6f6f;
+    padding: 32px;
+}
+
+#controls {
+    color: white;
+    font-family: sans-serif;
+    line-height: 1.5;
+}
+
+#keys {
+    display: flex;
+}
+
+#controls-left {
+    width: 50%;
+}
+
+#controls-right {
+    width: 50%;
+}
+
+.key {
+    font-family: monospace;
+    font-size: x-large;
+    background-color: #222;
+    width: min-content;
+    padding: 0px 10px;
+    border-radius: 20%;
+}
+
+.keyinfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.info {
+    margin-left: 10px;
+}
